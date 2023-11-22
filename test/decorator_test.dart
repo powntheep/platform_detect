@@ -1,5 +1,5 @@
 @TestOn('browser')
-import 'dart:html';
+import 'package:web/helpers.dart';
 
 import 'package:test/test.dart';
 
@@ -18,7 +18,7 @@ void main() {
 
     void sharedSetup() {
       calls = [];
-      fakeRootNode = DivElement();
+      fakeRootNode = createElementTag('div') as HTMLDivElement;
     }
 
     group('', () {
@@ -39,19 +39,19 @@ void main() {
       });
 
       test('should identify the operating system', () {
-        expect(fakeRootNode.classes,
+        expect(fakeRootNode.classList,
             contains('os-${nameToClassName(operatingSystem.name)}'));
       });
 
       group('should identify the browser', () {
         test('', () {
-          expect(fakeRootNode.classes,
+          expect(fakeRootNode.classList,
               contains('ua-${nameToClassName(browser.name)}'));
         });
 
         test('major version', () {
           expect(
-              fakeRootNode.classes,
+              fakeRootNode.classList,
               contains(
                   'ua-${nameToClassName(browser.name)}${browser.version.major}'));
         });
@@ -60,7 +60,7 @@ void main() {
           for (var i = nextVersion;
               i < nextVersion + decoratedNextVersionCount;
               i++) {
-            expect(fakeRootNode.classes,
+            expect(fakeRootNode.classList,
                 contains('ua-lt-${nameToClassName(browser.name)}$i'));
           }
         });
@@ -75,7 +75,7 @@ void main() {
       });
 
       void verifyDistinctFeatureCssClasses(List<Feature> features) {
-        String allCssClasses = fakeRootNode.classes.toString();
+        String allCssClasses = fakeRootNode.classList.toString();
         List<String> featureCssClasses =
             getFeatureSupportClasses(features).split(' ');
 
@@ -95,7 +95,7 @@ void main() {
         for (var i = 0; i < features.length; i++) {
           // 1. Ensure that its there
           expect(
-              fakeRootNode.classes,
+              fakeRootNode.classList,
               contains(matches(RegExp(
                   '($featureSupportNegationClassPrefix)*${features[i].name}'))));
         }

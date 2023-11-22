@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import 'dart:html';
+import 'package:web/helpers.dart';
 
 import 'package:meta/meta.dart';
 import 'package:platform_detect/src/detect.dart';
@@ -103,7 +103,7 @@ String nameToClassName(String name) {
 
 /// Whether the given [rootNode] has already had it's CSS classes set via [decorateRootNodeWithPlatformClasses].
 bool nodeHasBeenDecorated(Element rootNode) =>
-    rootNode.classes.contains(decorationCompleteClassName);
+    rootNode.classList.contains(decorationCompleteClassName);
 
 /// Generates CSS classes based on the current [browser], [operatingSystem] and optionally,
 /// [features] that your app may need conditional styling for in addition to the
@@ -144,12 +144,13 @@ void decorateRootNodeWithPlatformClasses(
   rootNode ??= document.documentElement;
 
   if (rootNode != null && !nodeHasBeenDecorated(rootNode)) {
-    var existingClasses = rootNode.classes.toList();
+    var existingClasses = rootNode.classList;
 
     rootNode.className = getPlatformClasses(
         features: features,
         includeDefaults: includeDefaults,
-        existingClasses: existingClasses);
+        existingClasses: List.generate(existingClasses.length,
+            (index) => existingClasses.item(index) ?? ''));
 
     if (callback != null) callback();
   }
